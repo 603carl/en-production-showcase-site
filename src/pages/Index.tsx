@@ -3,73 +3,121 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowDown, Mail, Phone, Award, Users, Calendar, Star } from "lucide-react";
+import { ArrowDown, Mail, Phone, Award, Users, Calendar, Star, Play, ChevronRight, Sparkles, Zap, Target } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Index = () => {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
   useEffect(() => {
     setIsLoaded(true);
+    const interval = setInterval(() => {
+      setCurrentTestimonial(prev => (prev + 1) % testimonials.length);
+    }, 5000);
+    return () => clearInterval(interval);
   }, []);
+
+  const testimonials = [
+    {
+      quote: "EN Production transformed our brand story into a cinematic masterpiece that exceeded every expectation.",
+      author: "Sarah Johnson",
+      role: "CEO, TechCorp Industries",
+      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b5bb?w=100&h=100&fit=crop&crop=face"
+    },
+    {
+      quote: "Their creative vision and technical expertise delivered results that drove 300% engagement growth.",
+      author: "Michael Chen",
+      role: "Marketing Director, InnovateLab",
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face"
+    },
+    {
+      quote: "Professional, innovative, and deadline-focused. EN Production is our go-to creative partner.",
+      author: "Emma Rodriguez",
+      role: "Brand Manager, FutureScale",
+      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face"
+    }
+  ];
 
   return (
     <div className="min-h-screen bg-black text-white overflow-x-hidden">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/10">
+      {/* Glassmorphism Navigation */}
+      <nav className="fixed top-0 w-full z-50 bg-black/10 backdrop-blur-xl border-b border-white/10">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+            <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent animate-pulse">
               EN Production
-            </div>
-            <div className="hidden md:flex items-center space-x-8">
-              <Link to="/services" className="hover:text-purple-400 transition-colors">Services</Link>
-              <Link to="/portfolio" className="hover:text-purple-400 transition-colors">Portfolio</Link>
-              <Link to="/about" className="hover:text-purple-400 transition-colors">About</Link>
-              <Link to="/contact" className="hover:text-purple-400 transition-colors">Contact</Link>
+            </Link>
+            <div className="hidden md:flex items-center space-x-2">
+              {[
+                { to: "/services", label: "Services" },
+                { to: "/portfolio", label: "Portfolio" },
+                { to: "/about", label: "About" },
+                { to: "/contact", label: "Contact" }
+              ].map((item) => (
+                <Link 
+                  key={item.to}
+                  to={item.to} 
+                  className="px-4 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-purple-400/50 hover:bg-purple-500/10 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/25"
+                >
+                  {item.label}
+                </Link>
+              ))}
             </div>
           </div>
         </div>
       </nav>
 
-      {/* Hero Section */}
+      {/* Hero Section with Video Background */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        {/* Video Background Effect */}
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-black to-blue-900/20">
-          <div 
-            className="absolute inset-0 opacity-30"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-            }}
-          ></div>
+        {/* Background Video/Image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: `url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80')`,
+          }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/80 via-black/70 to-blue-900/80"></div>
+          <div className="absolute inset-0 bg-black/40"></div>
         </div>
 
-        {/* Animated Gradient Orbs */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        {/* Floating Elements */}
+        <div className="absolute top-20 left-20 w-4 h-4 bg-purple-400 rounded-full animate-ping opacity-60"></div>
+        <div className="absolute top-40 right-32 w-2 h-2 bg-blue-400 rounded-full animate-ping delay-1000 opacity-60"></div>
+        <div className="absolute bottom-32 left-32 w-3 h-3 bg-pink-400 rounded-full animate-ping delay-500 opacity-60"></div>
 
-        {/* Content */}
-        <div className={`relative z-10 text-center px-6 transition-all duration-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <h1 className="text-6xl md:text-8xl font-bold mb-6 leading-tight">
-            <span className="bg-gradient-to-r from-purple-400 via-white to-blue-400 bg-clip-text text-transparent">
-              Crafting Visual Stories
+        {/* Hero Content */}
+        <div className={`relative z-10 text-center px-6 max-w-6xl mx-auto transition-all duration-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className="mb-6">
+            <Badge className="bg-gradient-to-r from-purple-500/20 to-blue-500/20 border-purple-400/30 text-purple-300 backdrop-blur-sm animate-pulse">
+              <Sparkles className="w-4 h-4 mr-2" />
+              Award-Winning Creative Studio
+            </Badge>
+          </div>
+          
+          <h1 className="text-7xl md:text-9xl font-black mb-8 leading-tight">
+            <span className="bg-gradient-to-r from-purple-400 via-pink-400 via-white to-blue-400 bg-clip-text text-transparent animate-gradient">
+              Visual Stories
             </span>
             <br />
-            <span className="text-white">That Captivate Audiences</span>
+            <span className="text-white drop-shadow-2xl">That Captivate</span>
           </h1>
           
-          <p className={`text-xl md:text-2xl text-gray-300 mb-8 max-w-4xl mx-auto transition-all duration-1000 delay-300 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            Award-winning film production company delivering exceptional content across all media platforms worldwide
+          <p className={`text-2xl md:text-3xl text-gray-200 mb-12 max-w-4xl mx-auto leading-relaxed transition-all duration-1000 delay-300 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            We craft exceptional visual experiences that transform brands and captivate audiences across all platforms worldwide.
           </p>
 
-          <div className={`flex flex-col sm:flex-row gap-4 justify-center items-center transition-all duration-1000 delay-500 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className={`flex flex-col sm:flex-row gap-6 justify-center items-center transition-all duration-1000 delay-500 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <Link to="/contact">
-              <Button size="lg" className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-lg px-8 py-6 rounded-full transform hover:scale-105 transition-all duration-300">
+              <Button size="lg" className="group bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-xl px-12 py-8 rounded-full transform hover:scale-110 transition-all duration-300 shadow-2xl hover:shadow-purple-500/50">
+                <Zap className="w-6 h-6 mr-3 group-hover:animate-spin" />
                 Start Your Project
+                <ChevronRight className="w-6 h-6 ml-3 group-hover:translate-x-2 transition-transform" />
               </Button>
             </Link>
             <Link to="/portfolio">
-              <Button size="lg" variant="outline" className="border-2 border-white/20 text-white hover:bg-white hover:text-black text-lg px-8 py-6 rounded-full transform hover:scale-105 transition-all duration-300">
+              <Button size="lg" variant="outline" className="group border-2 border-white/30 text-white hover:bg-white hover:text-black text-xl px-12 py-8 rounded-full transform hover:scale-110 transition-all duration-300 backdrop-blur-sm">
+                <Play className="w-6 h-6 mr-3 group-hover:scale-125 transition-transform" />
                 Watch Our Reel
               </Button>
             </Link>
@@ -78,250 +126,265 @@ const Index = () => {
 
         {/* Scroll Indicator */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <ArrowDown className="h-6 w-6 text-white/60" />
+          <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center">
+            <div className="w-1 h-3 bg-white/60 rounded-full mt-2 animate-pulse"></div>
+          </div>
         </div>
       </section>
 
       {/* Brand Promise Section */}
-      <section className="py-20 bg-gradient-to-b from-black to-gray-900">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-              Our Brand Promise
+      <section className="py-32 bg-gradient-to-b from-black via-gray-900/50 to-black relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-900/10 via-transparent to-blue-900/10"></div>
+        
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="text-center mb-20">
+            <Badge className="bg-gradient-to-r from-purple-500/20 to-blue-500/20 border-purple-400/30 text-purple-300 backdrop-blur-sm mb-6">
+              <Target className="w-4 h-4 mr-2" />
+              Our Core Values
+            </Badge>
+            <h2 className="text-6xl md:text-7xl font-black mb-8 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+              Excellence Redefined
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Three pillars that define our commitment to excellence
+            <p className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+              Three foundational pillars that drive every project we create
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 border-gray-700/50 hover:border-purple-500/50 transition-all duration-500 group">
-              <CardContent className="p-8 text-center">
-                <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <Star className="h-8 w-8 text-white" />
-                </div>
-                <h3 className="text-2xl font-bold mb-4 text-white">Creative Excellence</h3>
-                <p className="text-gray-300">Original storytelling and artistic vision that sets your brand apart from the competition</p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 border-gray-700/50 hover:border-purple-500/50 transition-all duration-500 group">
-              <CardContent className="p-8 text-center">
-                <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <Award className="h-8 w-8 text-white" />
-                </div>
-                <h3 className="text-2xl font-bold mb-4 text-white">Technical Mastery</h3>
-                <p className="text-gray-300">State-of-the-art equipment and expertise delivering cinema-quality results</p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 border-gray-700/50 hover:border-purple-500/50 transition-all duration-500 group">
-              <CardContent className="p-8 text-center">
-                <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <Calendar className="h-8 w-8 text-white" />
-                </div>
-                <h3 className="text-2xl font-bold mb-4 text-white">Timely Delivery</h3>
-                <p className="text-gray-300">On-schedule project completion guarantee with transparent communication throughout</p>
-              </CardContent>
-            </Card>
+          <div className="grid md:grid-cols-3 gap-10">
+            {[
+              {
+                icon: Sparkles,
+                title: "Creative Excellence",
+                description: "Pushing creative boundaries with original storytelling and innovative artistic vision that sets your brand apart",
+                gradient: "from-purple-500 to-pink-500"
+              },
+              {
+                icon: Award,
+                title: "Technical Mastery",
+                description: "State-of-the-art equipment and cutting-edge expertise delivering cinema-quality results every time",
+                gradient: "from-blue-500 to-cyan-500"
+              },
+              {
+                icon: Zap,
+                title: "Rapid Delivery",
+                description: "Lightning-fast turnaround times with transparent communication and guaranteed on-schedule completion",
+                gradient: "from-emerald-500 to-teal-500"
+              }
+            ].map((item, index) => (
+              <Card key={index} className="group bg-gradient-to-br from-gray-800/50 to-gray-900/50 border-gray-700/50 hover:border-purple-500/50 transition-all duration-700 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/25 backdrop-blur-sm">
+                <CardContent className="p-10 text-center">
+                  <div className={`w-20 h-20 mx-auto mb-8 bg-gradient-to-r ${item.gradient} rounded-2xl flex items-center justify-center group-hover:scale-125 group-hover:rotate-12 transition-all duration-500`}>
+                    <item.icon className="h-10 w-10 text-white" />
+                  </div>
+                  <h3 className="text-3xl font-bold mb-6 text-white group-hover:text-purple-400 transition-colors">{item.title}</h3>
+                  <p className="text-gray-300 text-lg leading-relaxed">{item.description}</p>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Stats Counter */}
-      <section className="py-20 bg-gradient-to-r from-purple-900/20 via-black to-blue-900/20 relative overflow-hidden">
-        <div 
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 50L0 0h100L50 50z' fill='%23ffffff' fill-opacity='0.02'/%3E%3C/svg%3E")`
-          }}
-        ></div>
+      <section className="py-32 bg-gradient-to-r from-purple-900/20 via-black to-blue-900/20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%20100%20100%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M50%2050L0%200h100L50%2050z%22%20fill%3D%22%23ffffff%22%20fill-opacity%3D%220.02%22/%3E%3C/svg%3E')] opacity-30"></div>
         
         <div className="container mx-auto px-6 relative z-10">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-              Our Impact in Numbers
+          <div className="text-center mb-20">
+            <h2 className="text-6xl md:text-7xl font-black mb-8 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+              Impact in Numbers
             </h2>
-            <p className="text-xl text-gray-300">
-              Proven results that speak to our commitment to excellence
+            <p className="text-2xl text-gray-300 max-w-3xl mx-auto">
+              Measurable results that showcase our commitment to excellence
             </p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700/50 hover:border-purple-500/50 transition-all duration-500">
-                <div className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-4">
-                  500+
-                </div>
-                <div className="text-gray-300 font-medium text-lg">
-                  Projects Completed
-                </div>
-              </div>
-            </div>
-
-            <div className="text-center">
-              <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700/50 hover:border-purple-500/50 transition-all duration-500">
-                <div className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-4">
-                  98%
-                </div>
-                <div className="text-gray-300 font-medium text-lg">
-                  Client Satisfaction
-                </div>
-              </div>
-            </div>
-
-            <div className="text-center">
-              <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700/50 hover:border-purple-500/50 transition-all duration-500">
-                <div className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-4">
-                  12+
-                </div>
-                <div className="text-gray-300 font-medium text-lg">
-                  Years in Business
+            {[
+              { number: "500+", label: "Projects Completed", description: "Successful campaigns delivered" },
+              { number: "98%", label: "Client Satisfaction", description: "Return customer rate" },
+              { number: "12+", label: "Years Experience", description: "Industry expertise" },
+              { number: "25+", label: "Awards Won", description: "Industry recognition" }
+            ].map((stat, index) => (
+              <div key={index} className="text-center group">
+                <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm rounded-3xl p-10 border border-gray-700/50 hover:border-purple-500/50 transition-all duration-500 hover:scale-110 hover:shadow-2xl hover:shadow-purple-500/25">
+                  <div className="text-6xl md:text-7xl font-black bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-4 group-hover:scale-125 transition-transform duration-300">
+                    {stat.number}
+                  </div>
+                  <div className="text-white font-bold text-xl mb-2">
+                    {stat.label}
+                  </div>
+                  <div className="text-gray-400 text-sm">
+                    {stat.description}
+                  </div>
                 </div>
               </div>
-            </div>
-
-            <div className="text-center">
-              <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700/50 hover:border-purple-500/50 transition-all duration-500">
-                <div className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-4">
-                  25+
-                </div>
-                <div className="text-gray-300 font-medium text-lg">
-                  Awards Won
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Industry Recognition */}
-      <section className="py-20 bg-gray-900">
+      {/* Testimonials Carousel */}
+      <section className="py-32 bg-gradient-to-b from-black to-gray-900 relative">
         <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-              Industry Recognition
+          <div className="text-center mb-20">
+            <h2 className="text-6xl md:text-7xl font-black mb-8 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+              Client Success Stories
             </h2>
-            <p className="text-xl text-gray-300">
-              Awards and acknowledgments from industry leaders
+            <p className="text-2xl text-gray-300">
+              Hear from industry leaders who chose EN Production
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h3 className="text-3xl font-bold mb-6 text-white">Featured Testimonial</h3>
-              <div className="bg-gradient-to-br from-purple-900/20 to-blue-900/20 rounded-2xl p-8 border border-purple-500/30">
-                <blockquote className="text-xl text-gray-200 mb-6 italic">
-                  "EN Production transformed our brand story into a cinematic masterpiece. Their attention to detail and creative vision exceeded all our expectations."
-                </blockquote>
-                <div className="flex items-center">
-                  <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center mr-4">
-                    <Users className="h-6 w-6 text-white" />
+          <div className="max-w-4xl mx-auto">
+            <Card className="bg-gradient-to-br from-purple-900/20 to-blue-900/20 border-purple-500/30 backdrop-blur-sm">
+              <CardContent className="p-12 text-center">
+                <div className="mb-8">
+                  <img 
+                    src={testimonials[currentTestimonial].avatar}
+                    alt={testimonials[currentTestimonial].author}
+                    className="w-24 h-24 rounded-full mx-auto mb-6 border-4 border-purple-400/50"
+                  />
+                  <blockquote className="text-3xl text-white font-light italic mb-8 leading-relaxed">
+                    "{testimonials[currentTestimonial].quote}"
+                  </blockquote>
+                  <div className="text-purple-400 font-bold text-xl">
+                    {testimonials[currentTestimonial].author}
                   </div>
-                  <div>
-                    <div className="font-semibold text-white">Sarah Johnson</div>
-                    <div className="text-gray-400">CEO, TechCorp Industries</div>
+                  <div className="text-gray-400">
+                    {testimonials[currentTestimonial].role}
                   </div>
                 </div>
-              </div>
-            </div>
-
-            <div>
-              <h3 className="text-3xl font-bold mb-6 text-white">Awards & Certifications</h3>
-              <div className="space-y-4">
-                {[
-                  "Best Commercial Production 2024",
-                  "Creative Excellence Award 2023", 
-                  "Industry Innovation Recognition 2023",
-                  "Client Choice Award 2022"
-                ].map((award, index) => (
-                  <div key={index} className="flex items-center p-4 border border-gray-700 rounded-lg hover:border-purple-500/50 transition-colors">
-                    <Award className="h-6 w-6 text-purple-400 mr-3" />
-                    <span className="text-gray-200">{award}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+                
+                <div className="flex justify-center space-x-3">
+                  {testimonials.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentTestimonial(index)}
+                      className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                        index === currentTestimonial 
+                          ? 'bg-purple-400 scale-125' 
+                          : 'bg-gray-600 hover:bg-gray-500'
+                      }`}
+                    />
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
 
-      {/* Newsletter Signup */}
-      <section className="py-20 bg-gradient-to-b from-gray-900 to-black">
-        <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-5xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-              Get Industry Insights
+      {/* Newsletter */}
+      <section className="py-32 bg-gradient-to-r from-purple-900/20 via-black to-blue-900/20">
+        <div className="container mx-auto px-6 text-center">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-6xl md:text-7xl font-black mb-8 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+              Stay Ahead of Trends
             </h2>
-            <p className="text-xl text-gray-300 mb-8">
-              Join 5,000+ industry professionals receiving exclusive content and project updates
+            <p className="text-2xl text-gray-300 mb-12">
+              Join 10,000+ creative professionals receiving exclusive insights and industry updates
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+            <div className="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto">
               <input 
                 type="email" 
-                placeholder="Enter your email address"
-                className="flex-1 px-6 py-3 bg-gray-800 border border-gray-700 rounded-full text-white placeholder-gray-400 focus:outline-none focus:border-purple-500"
+                placeholder="Enter your professional email"
+                className="flex-1 px-8 py-6 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:border-purple-500/50 focus:bg-white/20 transition-all text-lg"
               />
-              <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 px-8 py-3 rounded-full">
-                Subscribe
+              <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 px-12 py-6 rounded-2xl text-lg font-semibold hover:scale-105 transition-all duration-300">
+                Subscribe Now
               </Button>
             </div>
             
-            <p className="text-sm text-gray-400 mt-4">
-              Sample content: Behind-the-scenes insights, industry trends, and exclusive project previews
+            <p className="text-gray-400 mt-6">
+              Premium content including trend reports, case studies, and exclusive project previews
             </p>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-black border-t border-white/10 py-12">
-        <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div>
-              <div className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-4">
+      {/* Professional Footer */}
+      <footer className="bg-gradient-to-t from-black via-gray-900 to-black border-t border-white/10">
+        <div className="container mx-auto px-6 py-20">
+          <div className="grid md:grid-cols-5 gap-12 mb-16">
+            <div className="md:col-span-2">
+              <div className="text-3xl font-black bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-6">
                 EN Production
               </div>
-              <p className="text-gray-400">
-                Creating exceptional visual experiences that captivate and inspire.
+              <p className="text-gray-300 text-lg leading-relaxed mb-8">
+                Transforming visions into visual masterpieces that captivate audiences and drive meaningful connections worldwide.
               </p>
+              <div className="flex space-x-4">
+                {['Instagram', 'LinkedIn', 'Behance', 'Vimeo'].map((social) => (
+                  <Button key={social} size="sm" variant="outline" className="border-gray-600 text-gray-300 hover:border-purple-500 hover:text-purple-400 hover:bg-purple-500/10 transition-all">
+                    {social}
+                  </Button>
+                ))}
+              </div>
             </div>
+            
             <div>
-              <h4 className="font-semibold mb-4">Services</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link to="/services" className="hover:text-purple-400 transition-colors">Film Production</Link></li>
-                <li><Link to="/services" className="hover:text-purple-400 transition-colors">Graphics Design</Link></li>
-                <li><Link to="/services" className="hover:text-purple-400 transition-colors">YouTube Content</Link></li>
-                <li><Link to="/services" className="hover:text-purple-400 transition-colors">Photography</Link></li>
-                <li><Link to="/services" className="hover:text-purple-400 transition-colors">Business Branding</Link></li>
+              <h4 className="font-bold text-white mb-6 text-lg">Services</h4>
+              <ul className="space-y-3">
+                {['Film Production', 'Motion Graphics', 'YouTube Content', 'Photography', 'Brand Design'].map((service) => (
+                  <li key={service}>
+                    <Link to="/services" className="text-gray-400 hover:text-purple-400 transition-colors text-base">
+                      {service}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
+            
             <div>
-              <h4 className="font-semibold mb-4">Company</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link to="/about" className="hover:text-purple-400 transition-colors">About Us</Link></li>
-                <li><Link to="/about" className="hover:text-purple-400 transition-colors">Our Team</Link></li>
-                <li><Link to="/portfolio" className="hover:text-purple-400 transition-colors">Portfolio</Link></li>
-                <li><Link to="/contact" className="hover:text-purple-400 transition-colors">Contact</Link></li>
+              <h4 className="font-bold text-white mb-6 text-lg">Company</h4>
+              <ul className="space-y-3">
+                {[
+                  { label: 'About Us', to: '/about' },
+                  { label: 'Portfolio', to: '/portfolio' },
+                  { label: 'Case Studies', to: '/portfolio' },
+                  { label: 'Careers', to: '/about' }
+                ].map((item) => (
+                  <li key={item.label}>
+                    <Link to={item.to} className="text-gray-400 hover:text-purple-400 transition-colors text-base">
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
+            
             <div>
-              <h4 className="font-semibold mb-4">Contact</h4>
-              <div className="space-y-2 text-gray-400">
-                <div className="flex items-center gap-2">
-                  <Phone className="h-4 w-4" />
+              <h4 className="font-bold text-white mb-6 text-lg">Contact</h4>
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 text-gray-400">
+                  <Phone className="h-5 w-5 text-purple-400" />
                   <span>+1 (555) 123-4567</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Mail className="h-4 w-4" />
-                  <span>info@enproduction.com</span>
+                <div className="flex items-center gap-3 text-gray-400">
+                  <Mail className="h-5 w-5 text-purple-400" />
+                  <span>hello@enproduction.com</span>
+                </div>
+                <div className="text-gray-400 text-sm">
+                  Los Angeles • New York • Miami
                 </div>
               </div>
             </div>
           </div>
-          <div className="border-t border-white/10 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2025 EN Production. All rights reserved.</p>
+          
+          <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center">
+            <p className="text-gray-400 text-base">
+              © 2025 EN Production. All rights reserved. Crafted with excellence.
+            </p>
+            <div className="flex space-x-6 mt-4 md:mt-0">
+              <Link to="/privacy" className="text-gray-400 hover:text-purple-400 transition-colors text-sm">
+                Privacy Policy
+              </Link>
+              <Link to="/terms" className="text-gray-400 hover:text-purple-400 transition-colors text-sm">
+                Terms of Service
+              </Link>
+            </div>
           </div>
         </div>
       </footer>
