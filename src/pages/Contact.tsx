@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Mail, Phone, Map-pin, Clock, Instagram, Linkedin } from "lucide-react";
+import { Mail, Phone, MapPin, Clock, Instagram, Linkedin } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Contact = () => {
@@ -258,7 +258,7 @@ const Contact = () => {
                     <h3 className="text-xl font-semibold text-white mb-4">Main Office</h3>
                     <div className="space-y-3">
                       <div className="flex items-start gap-3">
-                        <Map-pin className="h-5 w-5 text-purple-400 mt-1" />
+                        <MapPin className="h-5 w-5 text-purple-400 mt-1" />
                         <div>
                           <p className="text-gray-300">123 Creative Boulevard</p>
                           <p className="text-gray-300">Los Angeles, CA 90210</p>
