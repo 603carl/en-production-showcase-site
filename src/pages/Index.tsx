@@ -1,7 +1,8 @@
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Play, Award, Users, Calendar, TrendingUp, ChevronRight } from "lucide-react";
+import { Play, Award, Users, Calendar, TrendingUp, ChevronRight, Phone, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
 import StatsCounter from "@/components/StatsCounter";
 import FeaturedWork from "@/components/FeaturedWork";
