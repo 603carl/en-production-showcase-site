@@ -1,4 +1,3 @@
-
 import { useQuery } from '@tanstack/react-query';
 
 // Define types for Playbook API responses
@@ -21,6 +20,65 @@ export interface PlaybookStats {
   client_satisfaction: number;
   total_views: number;
 }
+
+export interface PlaybookTestimonial {
+  id: string;
+  name: string;
+  company: string;
+  role: string;
+  content: string;
+  avatar: string;
+  rating?: number;
+  created_at: string;
+}
+
+// Custom hook for fetching testimonials
+export const useTestimonials = () => {
+  return useQuery({
+    queryKey: ['testimonials'],
+    queryFn: async (): Promise<PlaybookTestimonial[]> => {
+      console.log('Fetching testimonials from Playbook API...');
+      
+      // Mock testimonials data - replace with actual API call
+      const mockTestimonials: PlaybookTestimonial[] = [
+        {
+          id: '1',
+          name: "Sarah Johnson",
+          company: "TechStart Kenya",
+          role: "CEO & Founder",
+          content: "EN Production transformed our vision into a compelling story that helped us secure Series A funding. Their attention to detail exceeded all expectations.",
+          avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b5bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+          rating: 5,
+          created_at: '2024-01-15'
+        },
+        {
+          id: '2',
+          name: "Michael Wanjiku",
+          company: "Nairobi Creative Hub",
+          role: "Creative Director",
+          content: "Working with EN Production elevated our client campaigns to award-winning levels. Their technical expertise and artistic vision are unmatched in Kenya.",
+          avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+          rating: 5,
+          created_at: '2024-02-10'
+        },
+        {
+          id: '3',
+          name: "Amina Hassan",
+          company: "East Africa Fashion",
+          role: "Brand Manager",
+          content: "The complete rebrand and visual identity work delivered by EN Production increased our brand recognition across East Africa by 300%. Simply outstanding results.",
+          avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+          rating: 5,
+          created_at: '2024-03-05'
+        }
+      ];
+      
+      return mockTestimonials;
+    },
+    staleTime: 5 * 60 * 1000,
+    refetchInterval: 5 * 60 * 1000,
+  });
+};
 
 // Custom hook for fetching trailers
 export const useTrailers = () => {
