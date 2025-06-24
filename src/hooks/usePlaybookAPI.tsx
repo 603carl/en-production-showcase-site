@@ -279,3 +279,41 @@ export const useHeroImages = () => {
     staleTime: 15 * 60 * 1000,
   });
 };
+
+// Custom hook for fetching page-specific background images
+export const usePageBackgrounds = (page: string) => {
+  return useQuery({
+    queryKey: ['page-backgrounds', page],
+    queryFn: async (): Promise<string[]> => {
+      console.log(`Fetching ${page} background images from Playbook API...`);
+      
+      // Mock page-specific backgrounds - replace with actual API call
+      const backgroundImages: Record<string, string[]> = {
+        services: [
+          'https://images.unsplash.com/photo-1485846234645-a62644f84728?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
+          'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
+          'https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'
+        ],
+        portfolio: [
+          'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
+          'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
+          'https://images.unsplash.com/photo-1542362567-b07e54358753?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'
+        ],
+        about: [
+          'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
+          'https://images.unsplash.com/photo-1533228100845-08145b01de14?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
+          'https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'
+        ],
+        contact: [
+          'https://images.unsplash.com/photo-1478737270239-2f02b77fc618?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
+          'https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
+          'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'
+        ]
+      };
+      
+      return backgroundImages[page] || backgroundImages.services;
+    },
+    staleTime: 10 * 60 * 1000,
+    refetchInterval: 10 * 60 * 1000,
+  });
+};
