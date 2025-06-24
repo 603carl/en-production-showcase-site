@@ -1,90 +1,46 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Search, Star, Calendar, Users, ExternalLink, Play } from "lucide-react";
+import { Search, Play, Eye, Heart, Calendar, ExternalLink, Filter } from "lucide-react";
 import { Link } from "react-router-dom";
+import { usePortfolioByCategory } from "@/hooks/usePlaybookAPI";
 
-// This would be replaced with actual API calls to Behance/Dribbble
-const portfolioProjects = [
-  {
-    id: 1,
-    title: "SafariCom Brand Campaign",
-    category: "Film Production",
-    year: "2024",
-    client: "SafariCom",
-    image: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    description: "A compelling brand story showcasing innovation and connectivity across Kenya.",
-    views: "1.2M",
-    engagement: "18.5%",
-    tags: ["Brand Story", "Corporate", "Kenya"],
-    behanceUrl: "https://behance.net/gallery/example1",
-    featured: true
-  },
-  {
-    id: 2,
-    title: "Kenyan Fashion Week Highlight",
-    category: "Event Documentation",
-    year: "2024",
-    client: "Fashion Week Nairobi",
-    image: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    description: "High-energy coverage of Kenya's premier fashion event with cinematic excellence.",
-    views: "850K",
-    engagement: "24.3%",
-    tags: ["Fashion", "Event", "Documentary"],
-    behanceUrl: "https://behance.net/gallery/example2"
-  },
-  {
-    id: 3,
-    title: "Tech Startup Launch Campaign",
-    category: "Commercial",
-    year: "2023",
-    client: "TechHub Kenya",
-    image: "https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    description: "Dynamic product launch video that drove 400% increase in user sign-ups.",
-    views: "650K",
-    engagement: "31.2%",
-    tags: ["Product Launch", "Startup", "Animation"],
-    behanceUrl: "https://behance.net/gallery/example3"
-  }
+const portfolioCategories = [
+  "All",
+  "Online Bestie",
+  "About/show reel", 
+  "Adds / Short Clips",
+  "Cars",
+  "Film",
+  "GRAPHICS",
+  "Photography, Designing, Behan...",
+  "Podcast",
+  "Trailer",
+  "Tv"
 ];
 
 const Portfolio = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
-  const [projects, setProjects] = useState(portfolioProjects);
-  const [loading, setLoading] = useState(false);
+  
+  const { data: projects, isLoading, error } = usePortfolioByCategory(
+    selectedCategory === "All" ? undefined : selectedCategory
+  );
 
-  const categories = ["All", "Film Production", "Commercial", "Event Documentation", "Graphics Design"];
-
-  // Simulate API call to fetch portfolio data
-  useEffect(() => {
-    const fetchPortfolioData = async () => {
-      setLoading(true);
-      // This would be replaced with actual API calls to Behance/Dribbble
-      // const response = await fetch('https://api.behance.net/v2/users/your-username/projects');
-      // const data = await response.json();
-      setTimeout(() => {
-        setProjects(portfolioProjects);
-        setLoading(false);
-      }, 1000);
-    };
-
-    fetchPortfolioData();
-  }, []);
-
-  const filteredProjects = projects.filter(project => {
-    const matchesCategory = selectedCategory === "All" || project.category === selectedCategory;
+  const filteredProjects = projects?.filter(project => {
     const matchesSearch = project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          project.description.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+    return matchesSearch;
+  }) || [];
+
+  const featuredProject = filteredProjects.find(p => p.category === "About/show reel") || filteredProjects[0];
 
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-black/20 backdrop-blur-xl border-b border-white/10">
+      <nav className="fixed top-0 w-full z-50 glass border-b border-white/10">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
@@ -116,21 +72,26 @@ const Portfolio = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-24 pb-16 bg-gradient-to-br from-blue-900/20 via-black to-purple-900/20">
-        <div className="container mx-auto px-6">
+      <section className="pt-24 pb-16 bg-gradient-to-br from-blue-900/20 via-black to-purple-900/20 relative">
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-20 left-10 w-64 h-64 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
+          <div className="absolute top-40 right-10 w-64 h-64 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
+        </div>
+        
+        <div className="container mx-auto px-6 relative z-10">
           <div className="text-center mb-12">
-            <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              Our Portfolio
+            <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-gradient">
+              Creative Portfolio
             </h1>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Discover our latest projects and creative achievements across multiple industries
+              Explore our diverse collection of creative work across multiple industries and formats, directly from our Playbook portfolio
             </p>
           </div>
         </div>
       </section>
 
       {/* Portfolio Navigation */}
-      <section className="py-8 bg-gray-900">
+      <section className="py-8 bg-gray-900/50 backdrop-blur-sm">
         <div className="container mx-auto px-6">
           <div className="flex flex-col lg:flex-row gap-6 items-center justify-between mb-8">
             {/* Search */}
@@ -141,32 +102,62 @@ const Portfolio = () => {
                 placeholder="Search projects..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500"
+                className="w-full pl-10 pr-4 py-3 glass border border-gray-700/50 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500"
               />
             </div>
 
-            {/* Category Filter */}
-            <div className="flex flex-wrap gap-2">
-              {categories.map((category) => (
-                <Button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  variant={selectedCategory === category ? "default" : "outline"}
-                  className={selectedCategory === category 
-                    ? "bg-gradient-to-r from-blue-600 to-purple-600" 
-                    : "border-gray-600 text-gray-300 hover:border-blue-500"
-                  }
-                >
-                  {category}
-                </Button>
-              ))}
+            {/* Real-time Update Indicator */}
+            <div className="flex items-center gap-2 text-sm text-gray-400">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              Live from Playbook
             </div>
+          </div>
+
+          {/* Category Filter */}
+          <div className="flex flex-wrap gap-2 justify-center">
+            {portfolioCategories.map((category) => (
+              <Button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                variant={selectedCategory === category ? "default" : "outline"}
+                className={`transition-all duration-300 ${
+                  selectedCategory === category 
+                    ? "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700" 
+                    : "border-gray-600 text-gray-300 hover:border-blue-500 glass"
+                }`}
+              >
+                {category}
+              </Button>
+            ))}
           </div>
         </div>
       </section>
 
+      {/* Loading State */}
+      {isLoading && (
+        <section className="py-16 bg-black">
+          <div className="container mx-auto px-6">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+              <p className="text-gray-400">Loading portfolio from Playbook...</p>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Error State */}
+      {error && (
+        <section className="py-16 bg-black">
+          <div className="container mx-auto px-6">
+            <div className="text-center">
+              <p className="text-red-400">Failed to load portfolio. Please try again later.</p>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Featured Project */}
-      {filteredProjects.find(p => p.featured) && (
+      {featuredProject && !isLoading && (
         <section className="py-16 bg-black">
           <div className="container mx-auto px-6">
             <div className="text-center mb-8">
@@ -175,128 +166,174 @@ const Portfolio = () => {
               </h2>
             </div>
 
-            {(() => {
-              const featured = filteredProjects.find(p => p.featured);
-              return (
-                <div className="max-w-6xl mx-auto">
-                  <Card className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 border-gray-700/50 overflow-hidden">
-                    <div className="grid lg:grid-cols-2 gap-8">
-                      <div className="relative group">
-                        <img 
-                          src={featured.image}
-                          alt={featured.title}
-                          className="w-full h-full object-cover rounded-lg"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <div className="w-16 h-16 bg-blue-500/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-                            <Play className="h-8 w-8 text-white" />
-                          </div>
-                        </div>
-                      </div>
-                      <CardContent className="p-8">
-                        <div className="flex items-center gap-2 mb-4">
-                          <Badge className="bg-blue-600">{featured.category}</Badge>
-                          <Badge variant="outline" className="border-gray-600 text-gray-300">{featured.year}</Badge>
-                        </div>
-                        <h3 className="text-2xl font-bold mb-4 text-white">{featured.title}</h3>
-                        <p className="text-gray-300 mb-6 leading-relaxed">
-                          {featured.description}
-                        </p>
-                        
-                        <div className="grid grid-cols-2 gap-4 mb-6">
-                          <div className="flex items-center gap-2">
-                            <Star className="h-5 w-5 text-blue-400" />
-                            <span className="text-gray-300">{featured.views} Views</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Users className="h-5 w-5 text-blue-400" />
-                            <span className="text-gray-300">{featured.engagement} Engagement</span>
-                          </div>
-                        </div>
-
-                        <div className="flex gap-4">
-                          <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-                            View on Behance
-                            <ExternalLink className="h-4 w-4 ml-2" />
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </div>
-                  </Card>
-                </div>
-              );
-            })()}
-          </div>
-        </section>
-      )}
-
-      {/* Projects Grid */}
-      <section className="py-16 bg-gray-900">
-        <div className="container mx-auto px-6">
-          {loading ? (
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-              <p className="text-gray-400 mt-4">Loading portfolio data...</p>
-            </div>
-          ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredProjects.filter(p => !p.featured).map((project) => (
-                <Card key={project.id} className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 border-gray-700/50 hover:border-blue-500/50 transition-all duration-500 group overflow-hidden">
-                  <div className="relative">
+            <div className="max-w-6xl mx-auto">
+              <Card className="glass-card border-blue-500/30 overflow-hidden group">
+                <div className="grid lg:grid-cols-2 gap-0">
+                  <div className="relative overflow-hidden">
                     <img 
-                      src={project.image}
-                      alt={project.title}
-                      className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500"
+                      src={featuredProject.thumbnail}
+                      alt={featuredProject.title}
+                      className="w-full h-80 lg:h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                    <div className="absolute bottom-4 left-4">
-                      <Badge className="bg-blue-600/80 backdrop-blur-sm">{project.category}</Badge>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500">
+                      <div className="w-20 h-20 bg-blue-600/20 backdrop-blur-sm rounded-full flex items-center justify-center border border-blue-400/50">
+                        <Play className="h-8 w-8 text-white ml-1" />
+                      </div>
+                    </div>
+                    <div className="absolute top-4 right-4">
+                      <Badge className="bg-blue-600/80 backdrop-blur-sm text-white">
+                        Featured
+                      </Badge>
                     </div>
                   </div>
                   
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors">
-                        {project.title}
-                      </h3>
-                      <span className="text-gray-400 text-sm">{project.year}</span>
-                    </div>
+                  <CardContent className="p-8 flex flex-col justify-center">
+                    <Badge className="bg-purple-600/20 text-purple-400 border-purple-600/30 w-fit mb-4">
+                      {featuredProject.category}
+                    </Badge>
                     
-                    <p className="text-gray-300 mb-4 text-sm">{project.description}</p>
+                    <h3 className="text-3xl font-bold mb-4 text-white">
+                      {featuredProject.title}
+                    </h3>
                     
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-4 text-sm text-gray-400">
-                        <span>{project.views} views</span>
-                        <span>{project.engagement} engagement</span>
-                      </div>
-                    </div>
+                    <p className="text-gray-300 mb-6 leading-relaxed text-lg">
+                      {featuredProject.description}
+                    </p>
                     
-                    <div className="flex flex-wrap gap-1 mb-4">
-                      {project.tags.map((tag, index) => (
-                        <Badge key={index} variant="outline" className="border-gray-600 text-gray-400 text-xs">
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {featuredProject.tags.map((tag, index) => (
+                        <Badge 
+                          key={index}
+                          variant="outline" 
+                          className="border-blue-400/50 text-blue-300 hover:bg-blue-600/20"
+                        >
                           {tag}
                         </Badge>
                       ))}
                     </div>
                     
-                    <Button variant="outline" className="w-full border-gray-600 text-gray-300 hover:border-blue-500 hover:text-blue-400">
-                      View on Behance
-                      <ExternalLink className="h-4 w-4 ml-2" />
-                    </Button>
+                    <div className="flex items-center gap-6 mb-6 text-gray-400">
+                      {featuredProject.views && (
+                        <div className="flex items-center gap-2">
+                          <Eye className="h-5 w-5 text-blue-400" />
+                          <span>{featuredProject.views.toLocaleString()} views</span>
+                        </div>
+                      )}
+                      <div className="flex items-center gap-2">
+                        <Calendar className="h-5 w-5 text-purple-400" />
+                        <span>{new Date(featuredProject.created_at).toLocaleDateString()}</span>
+                      </div>
+                    </div>
+                    
+                    <div className="flex gap-4">
+                      <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                        <Play className="h-4 w-4 mr-2" />
+                        Watch Project
+                      </Button>
+                      <Button variant="outline" className="border-gray-600 text-gray-300 hover:border-blue-500">
+                        <ExternalLink className="h-4 w-4 mr-2" />
+                        View on Playbook
+                      </Button>
+                    </div>
+                  </CardContent>
+                </div>
+              </Card>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Projects Grid */}
+      {!isLoading && (
+        <section className="py-16 bg-gray-900/50">
+          <div className="container mx-auto px-6">
+            <div className="flex items-center justify-between mb-8">
+              <h3 className="text-2xl font-bold text-white">
+                {selectedCategory === "All" ? "All Projects" : selectedCategory}
+                <span className="text-gray-400 ml-2">({filteredProjects.length})</span>
+              </h3>
+              <div className="flex items-center gap-2 text-sm text-gray-400">
+                <Filter className="h-4 w-4" />
+                Filtered by: {selectedCategory}
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredProjects.filter(p => p.id !== featuredProject?.id).map((project) => (
+                <Card 
+                  key={project.id} 
+                  className="glass-card border-gray-700/50 hover:border-blue-500/50 transition-all duration-500 group overflow-hidden cursor-pointer transform hover:scale-105"
+                >
+                  <div className="relative overflow-hidden">
+                    <img 
+                      src={project.thumbnail}
+                      alt={project.title}
+                      className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="w-16 h-16 bg-blue-600/20 backdrop-blur-sm rounded-full flex items-center justify-center border border-blue-400/50">
+                        <Play className="h-6 w-6 text-white ml-1" />
+                      </div>
+                    </div>
+                    <div className="absolute top-4 right-4">
+                      <Badge className="bg-blue-600/80 backdrop-blur-sm text-blue-300 text-xs">
+                        {project.category}
+                      </Badge>
+                    </div>
+                  </div>
+                  
+                  <CardContent className="p-6">
+                    <h4 className="text-lg font-bold mb-3 text-white group-hover:text-blue-400 transition-colors line-clamp-2">
+                      {project.title}
+                    </h4>
+                    
+                    <p className="text-gray-300 mb-4 text-sm line-clamp-2">
+                      {project.description}
+                    </p>
+                    
+                    <div className="flex flex-wrap gap-1 mb-4">
+                      {project.tags.slice(0, 2).map((tag, index) => (
+                        <Badge 
+                          key={index} 
+                          variant="outline" 
+                          className="border-gray-600 text-gray-400 text-xs hover:border-blue-500"
+                        >
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                    
+                    <div className="flex items-center justify-between text-xs text-gray-400">
+                      {project.views && (
+                        <div className="flex items-center gap-1">
+                          <Eye className="h-3 w-3" />
+                          <span>{project.views.toLocaleString()}</span>
+                        </div>
+                      )}
+                      <span>{new Date(project.created_at).toLocaleDateString()}</span>
+                    </div>
                   </CardContent>
                 </Card>
               ))}
             </div>
-          )}
-        </div>
-      </section>
+
+            {filteredProjects.length === 0 && !isLoading && (
+              <div className="text-center py-16">
+                <p className="text-gray-400 text-lg">No projects found for "{selectedCategory}"</p>
+                <p className="text-gray-500 text-sm mt-2">Try selecting a different category or adjusting your search terms</p>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* Call to Action */}
       <section className="py-16 bg-gradient-to-br from-blue-900/20 via-black to-purple-900/20">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-            Ready to Create Your Story?
+            Ready to Create Something Amazing?
           </h2>
           <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
             Let's collaborate to bring your vision to life with the same excellence showcased in our portfolio

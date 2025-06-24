@@ -1,36 +1,36 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ArrowDown, Mail, Phone, Award, Users, Calendar, Star, Play, ChevronRight, Sparkles, Zap, Target, CheckCircle, Globe, Headphones } from "lucide-react";
+import { Play, Award, Users, Calendar, TrendingUp, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import StatsCounter from "@/components/StatsCounter";
+import FeaturedWork from "@/components/FeaturedWork";
+import TestimonialsSection from "@/components/TestimonialsSection";
+import ContactCTA from "@/components/ContactCTA";
+import TrailersSection from "@/components/TrailersSection";
+import { useCompanyStats, useHeroImages } from "@/hooks/usePlaybookAPI";
 
 const Index = () => {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [stats, setStats] = useState({
-    projectsCompleted: 0,
-    yearsExperience: 0,
-    clientSatisfaction: 0
-  });
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const { data: stats } = useCompanyStats();
+  const { data: heroImages } = useHeroImages();
 
+  // Cycle through hero images
   useEffect(() => {
-    setIsLoaded(true);
-    // Simulate fetching stats from portfolio API
-    const timer = setTimeout(() => {
-      setStats({
-        projectsCompleted: 147,
-        yearsExperience: 8,
-        clientSatisfaction: 98
-      });
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, []);
+    if (heroImages && heroImages.length > 0) {
+      const interval = setInterval(() => {
+        setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+      }, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [heroImages]);
+
+  const currentBgImage = heroImages?.[currentImageIndex] || 'https://images.unsplash.com/photo-1485846234645-a62644f84728?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80';
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-x-hidden">
-      {/* Glassmorphism Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-black/20 backdrop-blur-xl border-b border-white/10">
+    <div className="min-h-screen bg-black text-white">
+      {/* Navigation */}
+      <nav className="fixed top-0 w-full z-50 glass border-b border-white/10">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
@@ -47,7 +47,11 @@ const Index = () => {
                 <Link 
                   key={item.to}
                   to={item.to} 
-                  className="px-6 py-3 rounded-full bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm border border-blue-400/20 hover:border-purple-400/50 hover:bg-gradient-to-r hover:from-blue-500/20 hover:to-purple-500/20 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/25 text-white font-medium"
+                  className={`px-6 py-3 rounded-full bg-gradient-to-r backdrop-blur-sm border transition-all duration-300 hover:scale-105 text-white font-medium ${
+                    item.to === "/" 
+                      ? "from-blue-500/20 to-purple-500/20 border-blue-400/50" 
+                      : "from-blue-500/10 to-purple-500/10 border-blue-400/20 hover:border-purple-400/50"
+                  }`}
                 >
                   {item.label}
                 </Link>
@@ -57,178 +61,191 @@ const Index = () => {
         </div>
       </nav>
 
-      {/* Hero Section with Background Image */}
-      <section className="relative min-h-screen flex items-center overflow-hidden">
-        {/* Background Image */}
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center justify-start overflow-hidden">
+        {/* Dynamic Background Image */}
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url('https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80')`,
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000"
+          style={{ 
+            backgroundImage: `url(${currentBgImage})`,
+            transform: 'scale(1.1)'
           }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent"></div>
+        />
+        
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/40"></div>
+        
+        {/* Animated Elements */}
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl animate-float"></div>
+          <div className="absolute bottom-20 right-10 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl animate-float" style={{animationDelay: '2s'}}></div>
         </div>
 
-        {/* Hero Content - Left Aligned */}
         <div className="container mx-auto px-6 relative z-10">
-          <div className={`max-w-3xl transition-all duration-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <Badge className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 border-blue-400/30 text-blue-300 backdrop-blur-sm mb-6">
-              <Award className="w-4 h-4 mr-2" />
-              Award-Winning Creative Studio in Kenya
-            </Badge>
+          <div className="max-w-3xl">
+            <div className="mb-6 animate-slide-up-fade">
+              <span className="px-4 py-2 bg-gradient-to-r from-blue-500/20 to-purple-500/20 backdrop-blur-sm border border-blue-400/30 rounded-full text-blue-300 text-sm font-medium">
+                🏆 Award-Winning Creative Studio in Kenya
+              </span>
+            </div>
             
-            <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">
-              <span className="text-white">Creating</span>
+            <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight animate-slide-up-fade" style={{animationDelay: '0.2s'}}>
+              <span className="bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent">
+                Cinematic
+              </span>
               <br />
-              <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-                Visual Excellence
+              <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-gradient">
+                Excellence
               </span>
             </h1>
             
-            <p className="text-xl text-gray-300 mb-8 max-w-2xl leading-relaxed">
-              We craft exceptional visual experiences that transform brands and captivate audiences across Kenya and globally through remote services.
+            <p className="text-xl md:text-2xl text-gray-200 mb-8 leading-relaxed animate-slide-up-fade max-w-2xl" style={{animationDelay: '0.4s'}}>
+              Creating award-winning films, commercials, and digital content that captivates audiences and elevates brands across Kenya and East Africa.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 mb-12">
+            <div className="flex flex-col sm:flex-row gap-4 animate-slide-up-fade" style={{animationDelay: '0.6s'}}>
+              <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-lg px-8 py-4 rounded-full btn-glow transform hover:scale-105 transition-all duration-300">
+                <Play className="mr-2 h-5 w-5" />
+                Watch Our Reel
+              </Button>
               <Link to="/contact">
-                <Button size="lg" className="group bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-lg px-8 py-6 rounded-full transform hover:scale-105 transition-all duration-300 shadow-xl">
-                  <Zap className="w-5 h-5 mr-2 group-hover:animate-spin" />
+                <Button variant="outline" size="lg" className="border-2 border-white/30 text-white hover:bg-white/10 text-lg px-8 py-4 rounded-full backdrop-blur-sm transition-all duration-300">
                   Start Your Project
-                  <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </Link>
-              <Link to="/portfolio">
-                <Button size="lg" variant="outline" className="border-2 border-white/30 text-white hover:bg-white hover:text-black text-lg px-8 py-6 rounded-full transform hover:scale-105 transition-all duration-300 backdrop-blur-sm">
-                  <Play className="w-5 h-5 mr-2" />
-                  View Our Work
+                  <ChevronRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
             </div>
 
-            {/* Quick Stats */}
-            <div className="grid grid-cols-3 gap-6">
-              <div className="text-center">
-                <div className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                  {stats.projectsCompleted}+
+            {/* Quick Stats from API */}
+            {stats && (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 animate-slide-up-fade" style={{animationDelay: '0.8s'}}>
+                <div className="text-center glass-card p-4 rounded-lg border border-white/10">
+                  <div className="text-2xl font-bold text-blue-400">{stats.total_projects}+</div>
+                  <div className="text-sm text-gray-300">Projects</div>
                 </div>
-                <div className="text-gray-400 text-sm">Projects</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                  {stats.yearsExperience}+
+                <div className="text-center glass-card p-4 rounded-lg border border-white/10">
+                  <div className="text-2xl font-bold text-purple-400">{stats.years_experience}</div>
+                  <div className="text-sm text-gray-300">Years</div>
                 </div>
-                <div className="text-gray-400 text-sm">Years</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                  {stats.clientSatisfaction}%
+                <div className="text-center glass-card p-4 rounded-lg border border-white/10">
+                  <div className="text-2xl font-bold text-pink-400">{stats.client_satisfaction}%</div>
+                  <div className="text-sm text-gray-300">Satisfaction</div>
                 </div>
-                <div className="text-gray-400 text-sm">Satisfaction</div>
+                <div className="text-center glass-card p-4 rounded-lg border border-white/10">
+                  <div className="text-2xl font-bold text-green-400">{(stats.total_views / 1000000).toFixed(1)}M</div>
+                  <div className="text-sm text-gray-300">Views</div>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
-      </section>
 
-      {/* Services Overview */}
-      <section className="py-20 bg-gradient-to-b from-black to-gray-900/50">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              Our Services
-            </h2>
-            <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-              Professional creative services delivered with excellence
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                icon: Play,
-                title: "Film Production",
-                description: "Professional video production from concept to completion",
-                gradient: "from-blue-500 to-cyan-500"
-              },
-              {
-                icon: Sparkles,
-                title: "Graphics Design",
-                description: "Stunning visual designs that make your brand stand out",
-                gradient: "from-purple-500 to-pink-500"
-              },
-              {
-                icon: Globe,
-                title: "Digital Marketing",
-                description: "Strategic online presence and content optimization",
-                gradient: "from-green-500 to-blue-500"
-              }
-            ].map((service, index) => (
-              <Card key={index} className="group bg-gradient-to-br from-gray-800/50 to-gray-900/50 border-gray-700/50 hover:border-blue-500/50 transition-all duration-500 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/25">
-                <CardContent className="p-8 text-center">
-                  <div className={`w-16 h-16 mx-auto mb-6 bg-gradient-to-r ${service.gradient} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                    <service.icon className="h-8 w-8 text-white" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-4 text-white">{service.title}</h3>
-                  <p className="text-gray-300">{service.description}</p>
-                </CardContent>
-              </Card>
+        {/* Image Indicators */}
+        {heroImages && heroImages.length > 1 && (
+          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2">
+            {heroImages.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentImageIndex(index)}
+                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  index === currentImageIndex ? 'bg-blue-400' : 'bg-white/30'
+                }`}
+              />
             ))}
           </div>
-        </div>
+        )}
       </section>
 
-      {/* Why Choose Us */}
-      <section className="py-20 bg-gray-900">
+      {/* Company Story */}
+      <section className="py-20 bg-gradient-to-br from-gray-900/90 via-black to-purple-900/20 relative">
         <div className="container mx-auto px-6">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div className="animate-slide-up-fade">
               <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                Why Choose EN Production?
+                Crafting Stories That Matter
               </h2>
-              <div className="space-y-6">
-                {[
-                  "Award-winning creative team with international recognition",
-                  "Kenya-based with global remote service capabilities",
-                  "Fast turnaround times without compromising quality",
-                  "Comprehensive services from concept to completion"
-                ].map((point, index) => (
-                  <div key={index} className="flex items-center gap-4">
-                    <CheckCircle className="h-6 w-6 text-green-400 flex-shrink-0" />
-                    <p className="text-gray-300">{point}</p>
+              <p className="text-lg text-gray-300 mb-6 leading-relaxed">
+                Since 2017, EN Production has been at the forefront of Kenya's creative industry, delivering exceptional visual content that resonates with audiences and drives meaningful connections.
+              </p>
+              <p className="text-lg text-gray-300 mb-8 leading-relaxed">
+                From intimate documentaries to large-scale commercial campaigns, we combine technical excellence with authentic storytelling to create content that not only looks beautiful but makes a lasting impact.
+              </p>
+              
+              <div className="grid grid-cols-2 gap-6 mb-8">
+                <div className="flex items-center gap-3">
+                  <Award className="h-8 w-8 text-blue-400" />
+                  <div>
+                    <div className="font-semibold text-white">Award Winning</div>
+                    <div className="text-sm text-gray-400">8+ Industry Awards</div>
                   </div>
-                ))}
+                </div>
+                <div className="flex items-center gap-3">
+                  <Users className="h-8 w-8 text-purple-400" />
+                  <div>
+                    <div className="font-semibold text-white">Expert Team</div>
+                    <div className="text-sm text-gray-400">15+ Professionals</div>
+                  </div>
+                </div>
               </div>
+
+              <Link to="/about">
+                <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 px-8 py-3 rounded-full">
+                  Learn More About Us
+                  <ChevronRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
             </div>
-            <div className="relative">
-              <img 
-                src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                alt="Our Team at Work"
-                className="rounded-2xl shadow-2xl"
-              />
+            
+            <div className="relative animate-slide-up-fade" style={{animationDelay: '0.2s'}}>
+              <div className="aspect-video rounded-2xl overflow-hidden bg-gradient-to-br from-blue-900/20 to-purple-900/20 group cursor-pointer relative">
+                <img 
+                  src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                  alt="Behind the scenes"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/30">
+                    <Play className="h-8 w-8 text-white ml-1" />
+                  </div>
+                </div>
+              </div>
+              <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full opacity-20 blur-2xl"></div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section className="py-20 bg-gradient-to-r from-blue-900/20 via-purple-900/20 to-pink-900/20">
-        <div className="container mx-auto px-6 text-center">
-          <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-            Ready to Create Something Amazing?
-          </h2>
-          <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-            Let's discuss your project and bring your vision to life
-          </p>
-          <Link to="/contact">
-            <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-lg px-12 py-6 rounded-full transform hover:scale-105 transition-all duration-300">
-              Get Started Today
-            </Button>
-          </Link>
+      {/* Trailers Section - Replacing Services */}
+      <TrailersSection />
+
+      {/* Featured Work */}
+      <section className="py-20 bg-gradient-to-br from-purple-900/20 via-black to-blue-900/20">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-gradient">
+              Featured Work
+            </h2>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              Discover our most impactful projects and creative achievements
+            </p>
+          </div>
+          <FeaturedWork />
         </div>
       </section>
 
+      {/* Dynamic Stats Counter */}
+      <StatsCounter />
+
+      {/* Testimonials */}
+      <TestimonialsSection />
+
+      {/* Contact CTA */}
+      <ContactCTA />
+
       {/* Professional Footer */}
-      <footer className="bg-gradient-to-t from-gray-900 via-gray-800 to-gray-900 border-t border-white/10">
+      <footer className="bg-gradient-to-r from-gray-900 via-black to-gray-900 border-t border-gray-800">
         <div className="container mx-auto px-6 py-16">
           <div className="grid md:grid-cols-4 gap-8 mb-12">
             <div className="md:col-span-2">
